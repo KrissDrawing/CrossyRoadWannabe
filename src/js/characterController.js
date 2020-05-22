@@ -1,4 +1,4 @@
-let randomRotation;
+export let randomRotation;
 export const controls = (moveVector, setJump, cube) => {
   const checkKeyPress = (key) => {
     setJump();

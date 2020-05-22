@@ -20,7 +20,7 @@ const placeObstacles = (offset, obstacles) => {
     for (let j = 0; j <= 9; j++) {
       rows = getRandomInt(0, 2);
       for (let i = 0; i <= rows; i++) {
-        obstacles[100 + i + i * j].position.set(
+        obstacles[40 + i + i * j].position.set(
           getRandomInt(0, 10),
           j + offset + 9,
           0

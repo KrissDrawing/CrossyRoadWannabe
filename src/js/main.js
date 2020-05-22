@@ -1,4 +1,5 @@
 import { generateTerain } from "./generator";
+import { generateEnemies, enemiesController, placeEnemies } from "./enemies";
 import { checkCollisions } from "./collisions";
 import { controls, randomRotation } from "./characterController";
 // import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
@@ -6,8 +7,11 @@ import { controls, randomRotation } from "./characterController";
 let camera, scene, renderer, cube, character;
 let delta = 0;
 let moveVector = new THREE.Vector2(0, 0);
+const CAMERA_OFFSET = new THREE.Vector3(0, -3, 10);
 let jump = false;
 let obstacles = [];
+
+var loader = new THREE.OBJLoader();
 
 const setJump = () => {
   jump = true;
@@ -22,8 +26,8 @@ export function init() {
     1000
   );
 
-  camera.position.y = -3;
-  camera.position.z = 5;
+  // camera.position.y = -3;
+  // camera.position.z = 5;
   camera.rotation.x = 0.8;
   // camera.rotation.x = 0.4;
 
@@ -47,19 +51,36 @@ export function init() {
     wireframe: true,
   });
   //   const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+
   const charGeometry = new THREE.BoxGeometry(0.8, 0.8, 1);
   character = new THREE.Mesh(charGeometry, material);
   cube = new THREE.Mesh(geometry, boxMaterial);
   cube.position.set(5, 1, 0);
-  cube.add(character);
+  // cube.add(character);
   scene.add(cube);
 
-  for (let i = 0; i < 200; i++) {
+  // camera.position.z = 5;
+
+  loader.load(
+    "src/assets/models/char.obj",
+    // called when resource is loaded
+    function (object) {
+      object.rotation.z = Math.PI;
+      object.rotation.y = Math.PI;
+      object.rotation.z = Math.PI / 2;
+      object.scale.set(0.5, 0.5, 0.5);
+      cube.add(object);
+    }
+  );
+
+  for (let i = 0; i < 80; i++) {
     let obstacle = new THREE.Mesh(geometry, material);
     obstacle.position.x = i;
     scene.add(obstacle);
     obstacles.push(obstacle);
   }
+
+  generateEnemies(scene);
 }
 
 let positionTrigger = 0;
@@ -87,9 +108,11 @@ export function animate() {
 
   // Rotate cube (Change values to change speed)
 
-  camera.position.x = cube.position.x;
-  camera.position.y = cube.position.y - 3;
+  // camera.position.x = cube.position.x;
+  // camera.position.y = cube.position.y - 3;
   // camera.position.y += 0.01;
+
+  camera.position.lerp(cube.position.clone().add(CAMERA_OFFSET), 0.05);
 
   renderer.render(scene, camera);
 }
