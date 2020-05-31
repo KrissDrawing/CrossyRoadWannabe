@@ -1,7 +1,13 @@
 import { generateTerain } from "./generator";
-import { generateEnemies, enemiesController, placeEnemies } from "./enemies";
+import {
+  generateEnemies,
+  flagTrigger,
+  enemiesController,
+  placeEnemies,
+} from "./enemies";
 import { checkCollisions } from "./collisions";
 import { controls, randomRotation } from "./characterController";
+import { positionTrigger, incPositionTrigger } from "./helpers";
 // import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
 
 let camera, scene, renderer, cube, character;
@@ -83,12 +89,11 @@ export function init() {
   generateEnemies(scene);
 }
 
-let positionTrigger = 0;
-
 export function animate() {
   if (cube.position.y >= positionTrigger + 4) {
     generateTerain(positionTrigger, obstacles, scene);
-    positionTrigger += 9;
+    flagTrigger();
+    incPositionTrigger(9);
   }
 
   checkCollisions(cube, obstacles, moveVector);
