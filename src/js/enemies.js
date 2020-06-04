@@ -5,7 +5,6 @@ import {
   toggleTrigger,
   scene,
   rowPlace,
-  SEGMENT_LENGTH,
 } from "./helpers";
 import { Enemy } from "./Enemy";
 let enemies = [];

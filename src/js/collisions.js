@@ -1,4 +1,4 @@
-export const checkCollisions = (cube, obstacles, moveVector) => {
+export const checkCollisions = (cube, obstacles, moveVector, enemy = false) => {
   obstacles.forEach((obstacle) => {
     if (
       cube.position.x >
@@ -11,7 +11,7 @@ export const checkCollisions = (cube, obstacles, moveVector) => {
       obstacle.position.y - obstacle.geometry.parameters.height / 2 <
         cube.position.y
     ) {
-      cube.translateY(1);
+      enemy ? triggerDestroy : cube.translateY(1);
     }
 
     if (

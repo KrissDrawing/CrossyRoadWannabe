@@ -5,9 +5,11 @@ import {
   SEGMENT_WIDTH,
 } from "./helpers";
 
+import { placeWater } from "./water";
+
 let marker = 1;
 
-const wallGeometry = new THREE.BoxGeometry(1, SEGMENT_LENGTH, 1);
+const wallGeometry = new THREE.BoxGeometry(1, SEGMENT_LENGTH, 2);
 const obstacleGeometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshPhongMaterial({
   color: 0x0000ff,
@@ -31,10 +33,15 @@ const placeObstacles = (offset, scene, obstacles) => {
 
 export const generateTerain = (offset, obstacles, scene) => {
   placeObstacles(offset, scene, obstacles);
+
+  for (let i = 0; i < rowPlace.water.length; i++) {
+    placeWater(offset + rowPlace.water[i]);
+  }
+
   const wallL = new THREE.Mesh(wallGeometry, material);
   const wallR = new THREE.Mesh(wallGeometry, material);
-  wallL.position.set(0, offset + 4, 0);
-  wallR.position.set(SEGMENT_WIDTH, offset + 4, 0);
+  wallL.position.set(0, offset + 4, 0.5);
+  wallR.position.set(SEGMENT_WIDTH, offset + 4, 0.5);
   obstacles.push(wallL, wallR);
   scene.add(wallL, wallR);
 };

@@ -1,5 +1,6 @@
 import { generateTerain } from "./generator";
 import "./enemies";
+import "./water";
 // import { add } from "./water";
 import { checkCollisions } from "./collisions";
 import { controls, randomRotation } from "./characterController";
@@ -16,7 +17,7 @@ let delta = 0;
 let moveVector = new THREE.Vector2(0, 0);
 const CAMERA_OFFSET = new THREE.Vector3(0, -3, 10);
 let jump = false;
-let obstacles = [];
+export let obstacles = [];
 
 var loader = new THREE.OBJLoader();
 
@@ -133,11 +134,6 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-// while (obstacles.length > 50) {
-//   scene.remove(obstacles[50]);
-//   obstacles.shift();
-// }
 
 window.addEventListener("resize", onWindowResize, false);
 
