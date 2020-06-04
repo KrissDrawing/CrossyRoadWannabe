@@ -1,16 +1,12 @@
 import { generateTerain } from "./generator";
-import {
-  generateEnemies,
-  flagTrigger,
-  enemiesController,
-  placeEnemies,
-} from "./enemies";
+import { generateEnemies, flagTrigger } from "./enemies";
+// import { add } from "./water";
 import { checkCollisions } from "./collisions";
 import { controls, randomRotation } from "./characterController";
-import { positionTrigger, incPositionTrigger } from "./helpers";
+import { positionTrigger, incPositionTrigger, scene } from "./helpers";
 // import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
 
-let camera, scene, renderer, cube, character;
+let camera, renderer, cube, character;
 let delta = 0;
 let moveVector = new THREE.Vector2(0, 0);
 const CAMERA_OFFSET = new THREE.Vector3(0, -3, 10);
@@ -24,7 +20,7 @@ const setJump = () => {
 };
 
 export function init() {
-  scene = new THREE.Scene();
+  // scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -43,7 +39,15 @@ export function init() {
   document.body.appendChild(renderer.domElement);
 
   var light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+  light.castShadow = true;
   scene.add(light);
+
+  var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  scene.add(directionalLight);
+  directionalLight.position.z = 5;
+  directionalLight.rotation.y = 30;
+  directionalLight.rotation.x = 0.2;
+  directionalLight.castShadow = true;
 
   const geometry = new THREE.BoxGeometry(1, 1, 1);
   const material = new THREE.MeshPhongMaterial({
@@ -131,5 +135,6 @@ function onWindowResize() {
 window.addEventListener("resize", onWindowResize, false);
 
 init();
+// add();
 controls(moveVector, setJump, cube);
 animate();

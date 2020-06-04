@@ -8,3 +8,5 @@ export let positionTrigger = 0;
 export const incPositionTrigger = (amount) => {
   positionTrigger += amount;
 };
+
+export const scene = new THREE.Scene();

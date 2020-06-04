@@ -38,7 +38,7 @@ export const generateTerain = (offset, obstacles, scene) => {
     shininess: 30,
   });
 
-  placeObstacles(offset, obstacles);
+  // placeObstacles(offset, obstacles);
   const wallL = new THREE.Mesh(geometry, material);
   const wallR = new THREE.Mesh(geometry, material);
   wallL.position.set(0, offset + 12, 0);
