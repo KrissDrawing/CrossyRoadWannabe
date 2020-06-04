@@ -1,48 +1,40 @@
-import { getRandomInt } from "./helpers";
+import {
+  getRandomInt,
+  rowPlace,
+  SEGMENT_LENGTH,
+  SEGMENT_WIDTH,
+} from "./helpers";
 
 let marker = 1;
 
-const placeObstacles = (offset, obstacles) => {
-  let rows;
-  if (marker == 1) {
-    for (let j = 0; j < 9; j += 1) {
-      rows = getRandomInt(0, 2);
-      for (let i = 0; i <= 1; i += 1) {
-        obstacles[i + i * j].position.set(
-          getRandomInt(0, 10),
-          j + offset + 9,
-          0
-        );
-      }
+const wallGeometry = new THREE.BoxGeometry(1, SEGMENT_LENGTH, 1);
+const obstacleGeometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshPhongMaterial({
+  color: 0x0000ff,
+  shininess: 30,
+});
+
+const placeObstacles = (offset, scene, obstacles) => {
+  rowPlace.obstacle.forEach((item) => {
+    for (let i = 0; i < 4; i++) {
+      const obstacle = new THREE.Mesh(obstacleGeometry, material);
+      scene.add(obstacle);
+      obstacles.push(obstacle);
+      obstacle.position.set(getRandomInt(0, SEGMENT_WIDTH), offset + item, 0);
     }
-  }
-  if (marker == -1) {
-    for (let j = 0; j <= 9; j++) {
-      rows = getRandomInt(0, 2);
-      for (let i = 0; i <= rows; i++) {
-        obstacles[40 + i + i * j].position.set(
-          getRandomInt(0, 10),
-          j + offset + 9,
-          0
-        );
-      }
+    while (obstacles.length > SEGMENT_LENGTH * 5) {
+      scene.remove(obstacles[0]);
+      obstacles.shift();
     }
-  }
-  marker = -marker;
+  });
 };
 
 export const generateTerain = (offset, obstacles, scene) => {
-  const geometry = new THREE.BoxGeometry(1, 9, 1);
-  const material = new THREE.MeshPhongMaterial({
-    color: 0x0000ff,
-    shininess: 30,
-  });
-
-  // placeObstacles(offset, obstacles);
-  const wallL = new THREE.Mesh(geometry, material);
-  const wallR = new THREE.Mesh(geometry, material);
-  wallL.position.set(0, offset + 12, 0);
-  wallR.position.set(10, offset + 12, 0);
+  placeObstacles(offset, scene, obstacles);
+  const wallL = new THREE.Mesh(wallGeometry, material);
+  const wallR = new THREE.Mesh(wallGeometry, material);
+  wallL.position.set(0, offset + 4, 0);
+  wallR.position.set(SEGMENT_WIDTH, offset + 4, 0);
   obstacles.push(wallL, wallR);
   scene.add(wallL, wallR);
 };

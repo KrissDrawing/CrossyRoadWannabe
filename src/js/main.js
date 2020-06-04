@@ -1,9 +1,14 @@
 import { generateTerain } from "./generator";
-import { generateEnemies, flagTrigger } from "./enemies";
+import "./enemies";
 // import { add } from "./water";
 import { checkCollisions } from "./collisions";
 import { controls, randomRotation } from "./characterController";
-import { positionTrigger, incPositionTrigger, scene } from "./helpers";
+import {
+  positionTrigger,
+  incPositionTrigger,
+  scene,
+  toggleTrigger,
+} from "./helpers";
 // import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
 
 let camera, renderer, cube, character;
@@ -83,21 +88,19 @@ export function init() {
     }
   );
 
-  for (let i = 0; i < 80; i++) {
-    let obstacle = new THREE.Mesh(geometry, material);
-    obstacle.position.x = i;
-    scene.add(obstacle);
-    obstacles.push(obstacle);
-  }
-
-  generateEnemies(scene);
+  // for (let i = 0; i < 80; i++) {
+  //   let obstacle = new THREE.Mesh(geometry, material);
+  //   obstacle.position.x = i;
+  //   scene.add(obstacle);
+  //   obstacles.push(obstacle);
+  // }
 }
 
 export function animate() {
-  if (cube.position.y >= positionTrigger + 4) {
-    generateTerain(positionTrigger, obstacles, scene);
-    flagTrigger();
+  if (cube.position.y >= positionTrigger) {
+    toggleTrigger();
     incPositionTrigger(9);
+    generateTerain(positionTrigger, obstacles, scene);
   }
 
   checkCollisions(cube, obstacles, moveVector);
@@ -105,7 +108,6 @@ export function animate() {
   if (jump) {
     delta += 0.5;
     cube.position.z += Math.sin(delta) * 0.1;
-    // character.rotation.z += Math.sin(randomRotation * delta) * 0.1;
     if (cube.position.z <= 0.005) {
       jump = false;
       cube.position.z = 0;
@@ -132,9 +134,14 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+// while (obstacles.length > 50) {
+//   scene.remove(obstacles[50]);
+//   obstacles.shift();
+// }
+
 window.addEventListener("resize", onWindowResize, false);
 
 init();
-// add();
+
 controls(moveVector, setJump, cube);
 animate();
