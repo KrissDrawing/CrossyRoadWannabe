@@ -1,4 +1,4 @@
-import { scene, triggerGenerator } from "./helpers";
+import { scene } from "./helpers";
 
 let texture;
 const geometry = new THREE.PlaneGeometry(10, 1, 16, 4);
@@ -9,11 +9,8 @@ export const placeWater = (pos) => {
     function (texture) {
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
-      //   texture.offset.set(0, 0);
-      //   texture.repeat.set(2, 2);
     }
   );
-  //   texture.repeat.set(4, 4);
   const material = new THREE.MeshPhongMaterial({
     color: 0x297272,
     shininess: 100,
@@ -23,15 +20,13 @@ export const placeWater = (pos) => {
   });
 
   const water = new THREE.Mesh(geometry, material);
-  console.log(geometry);
-  water.position.set(geometry.parameters.width / 2, pos, -1);
+  water.position.set(geometry.parameters.width / 2, pos, -1.5);
   scene.add(water);
 };
 
 function loop() {
   if (texture != undefined) {
     texture.offset.x += 0.001;
-    // texture.offset.y += 0.001;
   }
 
   requestAnimationFrame(loop);

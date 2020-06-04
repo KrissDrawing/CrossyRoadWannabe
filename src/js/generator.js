@@ -10,10 +10,19 @@ import { placeWater } from "./water";
 let marker = 1;
 
 const wallGeometry = new THREE.BoxGeometry(1, SEGMENT_LENGTH, 2);
+const floorGeometry = new THREE.BoxGeometry(SEGMENT_WIDTH, 1, 1);
 const obstacleGeometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshPhongMaterial({
   color: 0x0000ff,
   shininess: 30,
+});
+const floorMaterial = new THREE.MeshPhongMaterial({
+  color: 0x66bb33,
+  shininess: 10,
+});
+const roadMaterial = new THREE.MeshPhongMaterial({
+  color: 0x333333,
+  shininess: 10,
 });
 
 const placeObstacles = (offset, scene, obstacles) => {
@@ -34,12 +43,30 @@ const placeObstacles = (offset, scene, obstacles) => {
 export const generateTerain = (offset, obstacles, scene) => {
   placeObstacles(offset, scene, obstacles);
 
-  for (let i = 0; i < rowPlace.water.length; i++) {
-    placeWater(offset + rowPlace.water[i]);
-  }
+  rowPlace.water.forEach((item) => {
+    placeWater(offset + item);
+  });
+
+  rowPlace.obstacle.forEach((item) => {
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.set(floorGeometry.parameters.width / 2, offset + item, -1);
+    scene.add(floor);
+  });
+  rowPlace.enemy.forEach((item) => {
+    const road = new THREE.Mesh(floorGeometry, roadMaterial);
+    road.position.set(floorGeometry.parameters.width / 2, offset + item, -1);
+    scene.add(road);
+  });
+
+  rowPlace.rest.forEach((item) => {
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.set(floorGeometry.parameters.width / 2, offset + item, -1);
+    scene.add(floor);
+  });
 
   const wallL = new THREE.Mesh(wallGeometry, material);
   const wallR = new THREE.Mesh(wallGeometry, material);
+
   wallL.position.set(0, offset + 4, 0.5);
   wallR.position.set(SEGMENT_WIDTH, offset + 4, 0.5);
   obstacles.push(wallL, wallR);

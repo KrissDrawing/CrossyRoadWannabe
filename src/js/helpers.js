@@ -23,6 +23,7 @@ export let rowPlace = {
   enemy: [],
   water: [],
   obstacle: [],
+  rest: [],
 };
 
 const placeRow = () => {
@@ -32,6 +33,7 @@ const placeRow = () => {
     enemy: [],
     water: [],
     obstacle: [],
+    rest: [],
   };
   for (let i = 0; i < SEGMENT_LENGTH; i++) {
     randPosition[i] = i;
@@ -54,4 +56,5 @@ const placeRow = () => {
     rowPlace.obstacle.push(randPosition[index]);
     randPosition.splice(index, 1);
   }
+  rowPlace.rest = randPosition;
 };

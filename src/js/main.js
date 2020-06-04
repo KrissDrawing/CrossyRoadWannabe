@@ -1,6 +1,6 @@
 import { generateTerain } from "./generator";
 import "./enemies";
-import "./water";
+// import "./water";
 // import { add } from "./water";
 import { checkCollisions } from "./collisions";
 import { controls, randomRotation } from "./characterController";
