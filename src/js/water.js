@@ -1,7 +1,12 @@
-import { scene } from "./helpers";
+import { scene, SEGMENT_WIDTH } from "./helpers";
 
 let texture;
-const geometry = new THREE.PlaneGeometry(10, 1, 16, 4);
+const geometry = new THREE.PlaneGeometry(
+  SEGMENT_WIDTH,
+  1,
+  SEGMENT_WIDTH * 2,
+  4
+);
 
 export const placeWater = (pos) => {
   texture = new THREE.TextureLoader().load(
@@ -22,6 +27,7 @@ export const placeWater = (pos) => {
   const water = new THREE.Mesh(geometry, material);
   water.position.set(geometry.parameters.width / 2, pos, -1.5);
   scene.add(water);
+  return water;
 };
 
 function loop() {

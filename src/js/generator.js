@@ -27,7 +27,8 @@ const roadMaterial = new THREE.MeshPhongMaterial({
 
 const placeObstacles = (offset, scene, obstacles) => {
   rowPlace.obstacle.forEach((item) => {
-    for (let i = 0; i < 4; i++) {
+    let random = getRandomInt(0, 4);
+    for (let i = 0; i < random; i++) {
       const obstacle = new THREE.Mesh(obstacleGeometry, material);
       scene.add(obstacle);
       obstacles.push(obstacle);
@@ -40,29 +41,39 @@ const placeObstacles = (offset, scene, obstacles) => {
   });
 };
 
+let enviroment = [];
+
 export const generateTerain = (offset, obstacles, scene) => {
   placeObstacles(offset, scene, obstacles);
 
   rowPlace.water.forEach((item) => {
-    placeWater(offset + item);
+    enviroment.push(placeWater(offset + item));
   });
 
   rowPlace.obstacle.forEach((item) => {
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.position.set(floorGeometry.parameters.width / 2, offset + item, -1);
     scene.add(floor);
+    enviroment.push(floor);
   });
   rowPlace.enemy.forEach((item) => {
     const road = new THREE.Mesh(floorGeometry, roadMaterial);
     road.position.set(floorGeometry.parameters.width / 2, offset + item, -1);
     scene.add(road);
+    enviroment.push(road);
   });
 
   rowPlace.rest.forEach((item) => {
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.position.set(floorGeometry.parameters.width / 2, offset + item, -1);
     scene.add(floor);
+    enviroment.push(floor);
   });
+
+  while (enviroment.length > 30) {
+    scene.remove(enviroment[0]);
+    enviroment.shift();
+  }
 
   const wallL = new THREE.Mesh(wallGeometry, material);
   const wallR = new THREE.Mesh(wallGeometry, material);

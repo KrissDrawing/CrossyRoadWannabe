@@ -56,3 +56,34 @@ export const checkCollisions = (cube, obstacles, moveVector, enemy = false) => {
     }
   });
 };
+
+export function raftColisions(char, rafts, moveVector) {
+  rafts.forEach((raft) => {
+    // if (
+    //   char.position.x > raft.position.x - raft.geometry.parameters.width / 2 &&
+    //   char.position.x < raft.position.x + raft.geometry.parameters.width / 2 &&
+    //   raft.position.y + raft.geometry.parameters.height / 2 > char.position.y &&
+    //   raft.position.y - raft.geometry.parameters.height / 2 < char.position.y
+    // ) {
+    //   char.position.x = raft.position.x + raft.geometry.parameters.width / 4;
+    // }
+
+    if (
+      char.position.y > raft.position.y - raft.geometry.parameters.height / 2 &&
+      char.position.y < raft.position.y + raft.geometry.parameters.height / 2
+    ) {
+      if (
+        char.position.x > raft.position.x &&
+        char.position.x < raft.position.x + raft.geometry.parameters.width / 2
+      ) {
+        char.position.x = raft.position.x + raft.geometry.parameters.width / 4;
+      }
+      if (
+        char.position.x < raft.position.x &&
+        char.position.x > raft.position.x - raft.geometry.parameters.width / 2
+      ) {
+        char.position.x = raft.position.x - raft.geometry.parameters.width / 4;
+      }
+    }
+  });
+}

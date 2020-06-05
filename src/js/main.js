@@ -1,14 +1,16 @@
 import { generateTerain } from "./generator";
 import "./enemies";
-// import "./water";
-// import { add } from "./water";
-import { checkCollisions } from "./collisions";
-import { controls, randomRotation } from "./characterController";
+import { checkCollisions, raftColisions } from "./collisions";
+import { controls } from "./characterController";
 import {
   positionTrigger,
   incPositionTrigger,
   scene,
   toggleTrigger,
+  obstacles,
+  rafts,
+  rowPlace,
+  SEGMENT_LENGTH,
 } from "./helpers";
 // import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
 
@@ -17,7 +19,6 @@ let delta = 0;
 let moveVector = new THREE.Vector2(0, 0);
 const CAMERA_OFFSET = new THREE.Vector3(0, -3, 10);
 let jump = false;
-export let obstacles = [];
 
 var loader = new THREE.OBJLoader();
 
@@ -97,14 +98,30 @@ export function init() {
   // }
 }
 
+let prevWater = [];
 export function animate() {
   if (cube.position.y >= positionTrigger) {
+    prevWater = rowPlace.water;
     toggleTrigger();
     incPositionTrigger(9);
     generateTerain(positionTrigger, obstacles, scene);
   }
 
+  if (!prevWater.includes(cube.position.y - positionTrigger + SEGMENT_LENGTH)) {
+    cube.position.x = Math.round(cube.position.x);
+  }
+
+  // rowPlace.water.forEach((item) => {
+  //   if (cube.position.y !== item + positionTrigger - SEGMENT_LENGTH) {
+
+  //   }
+
+  //   console.log(cube.position.y);
+  //   console.log(`AGUA ${item + positionTrigger - SEGMENT_LENGTH}`);
+  // });
+
   checkCollisions(cube, obstacles, moveVector);
+  raftColisions(cube, rafts, moveVector);
 
   if (jump) {
     delta += 0.5;

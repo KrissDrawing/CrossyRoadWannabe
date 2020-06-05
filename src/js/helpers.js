@@ -4,7 +4,7 @@ export function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 export const SEGMENT_LENGTH = 9;
-export const SEGMENT_WIDTH = 10;
+export const SEGMENT_WIDTH = 15;
 
 export let positionTrigger = 0;
 export const incPositionTrigger = (amount) => {
@@ -18,6 +18,10 @@ export const toggleTrigger = () => {
 };
 
 export const scene = new THREE.Scene();
+
+export let obstacles = [];
+export let enemies = [];
+export let rafts = [];
 
 export let rowPlace = {
   enemy: [],
