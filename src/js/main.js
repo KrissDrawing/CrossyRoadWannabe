@@ -9,15 +9,23 @@ import {
   toggleTrigger,
   obstacles,
   rafts,
+  enemies,
   rowPlace,
   SEGMENT_LENGTH,
+  SEGMENT_WIDTH,
+  resetEntities,
+  triggerDestroy,
+  isDestroyed,
 } from "./helpers";
+import "../styles/styles.scss";
 // import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
 
 let camera, renderer, cube, character;
 let delta = 0;
 let moveVector = new THREE.Vector2(0, 0);
 const CAMERA_OFFSET = new THREE.Vector3(0, -3, 10);
+const START_POSITION = new THREE.Vector3(SEGMENT_WIDTH / 2, 1, 0);
+// const START_POSITION = [SEGMENT_WIDTH / 2, 1, 0];
 let jump = false;
 
 var loader = new THREE.OBJLoader();
@@ -72,7 +80,7 @@ export function init() {
   const charGeometry = new THREE.BoxGeometry(0.8, 0.8, 1);
   character = new THREE.Mesh(charGeometry, material);
   cube = new THREE.Mesh(geometry, boxMaterial);
-  cube.position.set(5, 1, 0);
+  cube.position.set(START_POSITION.x, START_POSITION.y, START_POSITION.z);
   // cube.add(character);
   scene.add(cube);
 
@@ -98,6 +106,8 @@ export function init() {
   // }
 }
 
+let points = document.querySelector(".points");
+
 let prevWater = [];
 export function animate() {
   if (cube.position.y >= positionTrigger) {
@@ -107,21 +117,28 @@ export function animate() {
     generateTerain(positionTrigger, obstacles, scene);
   }
 
+  //colisions checking
+  checkCollisions(cube, obstacles, moveVector);
+  checkCollisions(cube, enemies, moveVector, true);
+
+  //check if underwater
   if (!prevWater.includes(cube.position.y - positionTrigger + SEGMENT_LENGTH)) {
     cube.position.x = Math.round(cube.position.x);
+  } else {
+    raftColisions(cube, rafts, moveVector);
   }
 
-  // rowPlace.water.forEach((item) => {
-  //   if (cube.position.y !== item + positionTrigger - SEGMENT_LENGTH) {
+  //check for wallBangs
+  if (cube.position.x < 1 || cube.position.x > SEGMENT_WIDTH - 1) {
+    triggerDestroy(true);
+  }
 
-  //   }
-
-  //   console.log(cube.position.y);
-  //   console.log(`AGUA ${item + positionTrigger - SEGMENT_LENGTH}`);
-  // });
-
-  checkCollisions(cube, obstacles, moveVector);
-  raftColisions(cube, rafts, moveVector);
+  if (isDestroyed) {
+    cube.position.set(START_POSITION.x, START_POSITION.y, START_POSITION.z);
+    resetEntities();
+    incPositionTrigger(-positionTrigger);
+    triggerDestroy(false);
+  }
 
   if (jump) {
     delta += 0.5;
@@ -132,6 +149,9 @@ export function animate() {
       character.rotation.z = 0;
     }
   }
+
+  //update points
+  points.innerHTML = cube.position.y;
 
   requestAnimationFrame(animate);
 

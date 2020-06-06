@@ -7,15 +7,13 @@ import {
   rowPlace,
   enemies,
   rafts,
+  intervalLines,
   SEGMENT_WIDTH,
 } from "./helpers";
 import { Enemy } from "./Objects/Enemy";
 import { Raft } from "./Objects/Raft";
 
-let intervalLines = [];
-
-const spawnObjects = (relPos, time, Entity) => {
-  let direction = 1;
+const spawnObjects = (relPos, time, Entity, deleteAfter, direction = 1) => {
   if (Entity == Enemy) {
     direction = (Math.round(Math.random()) - 0.5) * 2 * (Math.random() + 1);
   }
@@ -41,57 +39,41 @@ const spawnObjects = (relPos, time, Entity) => {
     }
     setTimeout(function () {
       scene.remove(entity);
-    }, 5000);
+    }, deleteAfter);
   }, intervalTime);
   intervalLines.push(spawnLine);
 };
 
-// const spawnObjects = (relPos) => {
-//   let direction = (Math.round(Math.random()) - 0.5) * 2 * (Math.random() + 1);
-//   let intervalTime = getRandomInt(1300, 1600);
-//   const spawnLine = setInterval(function () {
-//     let enemy = new Enemy(direction);
-//     if (direction < 0) {
-//       enemy.position.x = SEGMENT_WIDTH;
-//     }
-//     enemy.position.y = relPos;
-
-//     scene.add(enemy);
-//     enemies.push(enemy);
-//     setTimeout(function () {
-//       scene.remove(enemy);
-//     }, 5000);
-//   }, intervalTime);
-//   intervalLines.push(spawnLine);
-// };
-
 const clock = new THREE.Clock();
 let timer = 2;
-let iterator = 0;
+let dir = 1;
 
 function loop() {
   timer += clock.getDelta();
 
-  if (enemies[0] != undefined) enemies.forEach((item) => item.move());
-  if (rafts[0] != undefined) rafts.forEach((item) => item.move());
+  if (enemies.length > 0) enemies.forEach((item) => item.move());
+  if (rafts.length > 0) rafts.forEach((item) => item.move());
 
   if (triggerGenerator) {
     for (let i = 0; i < rowPlace.enemy.length; i++) {
-      spawnObjects(positionTrigger + rowPlace.enemy[i], [1300, 1600], Enemy);
+      spawnObjects(
+        positionTrigger + rowPlace.enemy[i],
+        [1300, 1600],
+        Enemy,
+        5000
+      );
     }
     rowPlace.water.forEach((item) => {
-      spawnObjects(positionTrigger + item, [1000, 1400], Raft);
+      spawnObjects(positionTrigger + item, [1600, 2000], Raft, 7000, dir);
+      dir = -dir;
     });
 
     while (intervalLines.length > 10) {
       clearInterval(intervalLines[0]);
       intervalLines.shift();
     }
-
-    iterator += 1;
     toggleTrigger();
   }
   requestAnimationFrame(loop);
 }
-
 loop();

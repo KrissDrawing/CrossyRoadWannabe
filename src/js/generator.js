@@ -3,6 +3,7 @@ import {
   rowPlace,
   SEGMENT_LENGTH,
   SEGMENT_WIDTH,
+  enviroment,
 } from "./helpers";
 
 import { placeWater } from "./water";
@@ -40,8 +41,6 @@ const placeObstacles = (offset, scene, obstacles) => {
     }
   });
 };
-
-let enviroment = [];
 
 export const generateTerain = (offset, obstacles, scene) => {
   placeObstacles(offset, scene, obstacles);
