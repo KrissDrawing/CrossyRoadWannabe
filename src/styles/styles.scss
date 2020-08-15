@@ -1,3 +1,9 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
 .points {
   color: #fff;
   position: fixed;
@@ -10,4 +16,106 @@
 
 .body {
   overflow: hidden;
+}
+
+.menu {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__Wrapper {
+    height: 200px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  &__Button {
+    height: 50px;
+    width: 100px;
+    border-radius: 10px;
+    border: none;
+
+    &:hover {
+      background-color: #fac;
+      cursor: pointer;
+    }
+  }
+  &__results {
+    background-color: pink;
+    width: 80vw;
+    height: 80vh;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__entry {
+    height: 40px;
+    width: 95%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid #555;
+    margin: 2px;
+
+    & > * {
+      margin: 0px;
+    }
+    &:nth-of-type(2n) {
+      background-color: red;
+    }
+  }
+}
+
+.button__return {
+  position: absolute;
+  bottom: 20px;
+}
+
+.entry__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.username {
+  &__container {
+    background-color: pink;
+    width: 400px;
+    height: 150px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  &__input {
+    width: 90%;
+    height: 50px;
+    font-size: 40px;
+  }
+  &__buttons {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+
+    & > button {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+.hide {
+  display: none;
 }

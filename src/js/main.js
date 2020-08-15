@@ -16,14 +16,17 @@ import {
   resetEntities,
   triggerDestroy,
   isDestroyed,
+  enviroment,
+  points,
+  setPoints,
 } from "./helpers";
 import "../styles/styles.scss";
 // import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
 
-let camera, renderer, cube, character;
+let camera, renderer, cube, mesh;
 let delta = 0;
 let moveVector = new THREE.Vector2(0, 0);
-const CAMERA_OFFSET = new THREE.Vector3(0, -3, 10);
+const CAMERA_OFFSET = new THREE.Vector3(2, -4, 6);
 const START_POSITION = new THREE.Vector3(SEGMENT_WIDTH / 2, 1, 0);
 // const START_POSITION = [SEGMENT_WIDTH / 2, 1, 0];
 let jump = false;
@@ -36,80 +39,97 @@ const setJump = () => {
 
 export function init() {
   // scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
+  camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 100000);
 
   // camera.position.y = -3;
   // camera.position.z = 5;
-  camera.rotation.x = 0.8;
-  // camera.rotation.x = 0.4;
+  // camera.rotation.x = 0.8;
 
   // Init renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.needsUpdate = true;
   document.body.appendChild(renderer.domElement);
 
-  var light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+  var light = new THREE.DirectionalLight(0xffffff, 1, 10000);
+  light.position.set(5, 1, 5);
+
   light.castShadow = true;
+  light.shadowCameraVisible = true;
+
+  light.shadowMapWidth = 512;
+  light.shadowMapHeight = 512;
+
   scene.add(light);
 
-  var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  scene.add(directionalLight);
-  directionalLight.position.z = 5;
-  directionalLight.rotation.y = 30;
-  directionalLight.rotation.x = 0.2;
-  directionalLight.castShadow = true;
-
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshPhongMaterial({
-    color: 0x0000ff,
-    shininess: 30,
+  // var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  // scene.add(directionalLight);
+  const startFloorGeo = new THREE.BoxGeometry(15, 10, 1);
+  const band = new THREE.BoxGeometry(1, 10, 4);
+  const bandWide = new THREE.BoxGeometry(15, 1, 4);
+  const startFieldMaterial = new THREE.MeshPhongMaterial({
+    transparent: true,
+    opacity: 100,
   });
+
+  const bandLeft = new THREE.Mesh(band, startFieldMaterial);
+  bandLeft.position.set(-0.5, 3.5, 0);
+  const bandRight = new THREE.Mesh(band, startFieldMaterial);
+  bandRight.position.set(15.5, 3.5, 0);
+  const bandBottom = new THREE.Mesh(bandWide, startFieldMaterial);
+  bandBottom.position.set(7.5, -1, 0);
+  const testObj = new THREE.Mesh(startFloorGeo, startFieldMaterial);
+  testObj.receiveShadow = true;
+  testObj.position.x = 7.5;
+  testObj.position.y = 3.5;
+  testObj.position.z = -1;
+  obstacles.push(bandBottom);
+  scene.add(testObj, bandLeft, bandRight, bandBottom);
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
 
   const boxMaterial = new THREE.MeshPhongMaterial({
-    color: 0x0000ff,
-    shininess: 30,
-    wireframe: true,
+    transparent: true,
+    opacity: 0,
   });
-  //   const material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
 
-  const charGeometry = new THREE.BoxGeometry(0.8, 0.8, 1);
-  character = new THREE.Mesh(charGeometry, material);
   cube = new THREE.Mesh(geometry, boxMaterial);
   cube.position.set(START_POSITION.x, START_POSITION.y, START_POSITION.z);
-  // cube.add(character);
+  //NEW CODE
+  var mtlLoader = new THREE.MTLLoader();
+  mtlLoader.load("src/assets/models/char.mtl", function (materials) {
+    materials.preload();
+    var objLoader = new THREE.OBJLoader();
+    objLoader.setMaterials(materials);
+
+    objLoader.load("src/assets/models/char.obj", function (mesh) {
+      mesh.traverse(function (node) {
+        if (node instanceof THREE.Mesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+        }
+      });
+
+      cube.add(mesh);
+      mesh.rotation.x = Math.PI / 2;
+      mesh.rotation.y = -Math.PI / 2;
+      mesh.position.set(-0.5, 4.25, 0);
+      mesh.scale.set(0.5, 0.5, 0.5);
+    });
+  });
+  // END NEW CODE
+
   scene.add(cube);
-
-  // camera.position.z = 5;
-
-  loader.load(
-    "src/assets/models/char.obj",
-    // called when resource is loaded
-    function (object) {
-      object.rotation.z = Math.PI;
-      object.rotation.y = Math.PI;
-      object.rotation.z = Math.PI / 2;
-      object.scale.set(0.5, 0.5, 0.5);
-      cube.add(object);
-    }
-  );
-
-  // for (let i = 0; i < 80; i++) {
-  //   let obstacle = new THREE.Mesh(geometry, material);
-  //   obstacle.position.x = i;
-  //   scene.add(obstacle);
-  //   obstacles.push(obstacle);
-  // }
 }
 
-let points = document.querySelector(".points");
-
+let pointsCounter = document.querySelector(".points");
 let prevWater = [];
+
 export function animate() {
+  // camera.lookAt(cube.position.x, cube.position.y, 1);
+  camera.rotation.x = 1;
+  // camera.rotation.y = 1;
   if (cube.position.y >= positionTrigger) {
     prevWater = rowPlace.water;
     toggleTrigger();
@@ -142,16 +162,17 @@ export function animate() {
 
   if (jump) {
     delta += 0.5;
-    cube.position.z += Math.sin(delta) * 0.1;
-    if (cube.position.z <= 0.005) {
+    cube.children[0].position.z += Math.sin(delta) * 0.1;
+    if (cube.children[0].position.z <= 0.005) {
       jump = false;
-      cube.position.z = 0;
-      character.rotation.z = 0;
+      cube.children[0].position.z = 0;
+      // character.rotation.z = 0;
     }
   }
 
+  setPoints(cube.position.y);
   //update points
-  points.innerHTML = cube.position.y;
+  pointsCounter.innerHTML = points;
 
   requestAnimationFrame(animate);
 

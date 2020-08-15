@@ -1,6 +1,11 @@
+import { enableControls } from "./helpers";
+
 export let randomRotation;
 export const controls = (moveVector, setJump, cube) => {
   const checkKeyPress = (key) => {
+    if (!enableControls) {
+      return;
+    }
     setJump();
     if (key.keyCode == "87") {
       cube.translateY(1);

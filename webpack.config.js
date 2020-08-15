@@ -5,7 +5,7 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     filename: "index.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "public"),
   },
   module: {
     rules: [
@@ -21,11 +21,7 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader",
-          },
-        ],
+        use: ["html-loader"],
       },
       {
         test: /\.s[ac]ss$/i,
@@ -33,22 +29,20 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
-        test: /\.(jpe?g|png|svg|gif|ico|webp|eot|ttf|woff|woff2|pdf|mp4|webm)$/i,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              outputPath: "assets",
-            },
+        test: /\.(jpe?g|mtl|obj|png|svg|gif|ico|webp|eot|ttf|woff|woff2|pdf|mp4|webm)$/i,
+        use: {
+          loader: "file-loader",
+          options: {
+            name: "[name].[ext]",
+            outputPath: "assets",
           },
-        ],
+        },
       },
     ],
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: "./src/index.html",
-      filename: "./index.html",
+      template: path.resolve(__dirname, "src", "index.html"),
     }),
   ],
 };

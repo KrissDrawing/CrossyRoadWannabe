@@ -1,15 +1,33 @@
+import { showMenuButton, showFinalScoreButton } from "./UI/UI";
+
 export const SEGMENT_LENGTH = 9;
 export const SEGMENT_WIDTH = 15;
 export const scene = new THREE.Scene();
 export let positionTrigger = 0;
 export let triggerGenerator = true;
 export let isDestroyed = false;
+export let points = 0;
+export let finalScore = 0;
 
 export let enemies = [];
 export let obstacles = [];
 export let rafts = [];
 export let enviroment = [];
 export let intervalLines = [];
+
+export let enableControls = false;
+
+export const resetFinalScore = () => {
+  finalScore = 0;
+};
+
+export const setPoints = (point) => {
+  points = point;
+};
+
+export const setControlsEnable = (isTrue) => {
+  enableControls = isTrue;
+};
 
 export const incPositionTrigger = (amount) => {
   positionTrigger += amount;
@@ -52,6 +70,10 @@ export const resetEntities = () => {
     clearInterval(intervalLines[0]);
     intervalLines.shift();
   }
+  setControlsEnable(false);
+  finalScore = points;
+  showFinalScoreButton();
+  showMenuButton();
 };
 
 export let rowPlace = {

@@ -20,9 +20,42 @@
   </head>
   <body>
     <p class="points">points</p>
+    <div class="menu">
+      <div class="menu__Wrapper">
+        <h3>Play New Game</h3>
+      <button class="menu__Button">Start Game</button>
+      <button class="button__results">results</button>
+      <button class="button__save hide">Save Score</button>
+    </div>
+
+    <div class="username__container hide">
+      <input placeholder="Your nick..." class="username__input" />
+      <div class="username__buttons">
+        <button class="save__back">back</button>
+        <button class="save__proceed">Save!</button>
+      </div>
+
+    </div>
+    <div class="menu__results hide">
+      <div class="menu__entry">
+        <p>lp</p>
+        <h4>Username</h4>
+        <p>result</p>
+      </div>
+      <div class="entry__container">
+      </div>
+      <button class="button__return"> Return </button>
+
+    </div>
+    </div>
+
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
-    <script src="https://mamboleoo.be/learnThree/demos/OBJLoader.js"></script>
+    <!-- <script src="https://mamboleoo.be/learnThree/demos/OBJLoader.js"></script> -->
+    <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/MTLLoader.js"></script>
+
     <!-- <script type="module" src="./js/main.js"></script>
     <script type="module" src="./js/generator.js"></script> -->
   </body>

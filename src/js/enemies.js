@@ -56,21 +56,18 @@ function loop() {
 
   if (triggerGenerator) {
     for (let i = 0; i < rowPlace.enemy.length; i++) {
-      spawnObjects(
-        positionTrigger + rowPlace.enemy[i],
-        [1300, 1600],
-        Enemy,
-        5000
-      );
+      spawnObjects(positionTrigger + rowPlace.enemy[i], [1300, 1600], Enemy, 5000);
     }
     rowPlace.water.forEach((item) => {
       spawnObjects(positionTrigger + item, [1600, 2000], Raft, 7000, dir);
       dir = -dir;
     });
 
-    while (intervalLines.length > 10) {
-      clearInterval(intervalLines[0]);
-      intervalLines.shift();
+    if (intervalLines) {
+      while (intervalLines.length >= 10) {
+        clearInterval(intervalLines[0]);
+        intervalLines.shift();
+      }
     }
     toggleTrigger();
   }
