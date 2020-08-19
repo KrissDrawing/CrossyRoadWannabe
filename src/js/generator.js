@@ -31,12 +31,12 @@ const placeObstacles = (offset, scene, obstacles) => {
       const obstacle = new THREE.Mesh(obstacleGeometry, transparent);
 
       var mtlLoader = new THREE.MTLLoader();
-      mtlLoader.load("src/assets/models/tree.mtl", function (materials) {
+      mtlLoader.load("./assets/models/tree.mtl", function (materials) {
         materials.preload();
         var objLoader = new THREE.OBJLoader();
         objLoader.setMaterials(materials);
 
-        objLoader.load("src/assets/models/tree.obj", function (mesh) {
+        objLoader.load("./assets/models/tree.obj", function (mesh) {
           mesh.traverse(function (node) {
             if (node instanceof THREE.Mesh) {
               node.castShadow = true;

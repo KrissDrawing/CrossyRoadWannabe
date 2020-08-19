@@ -21,14 +21,12 @@ import {
   setPoints,
 } from "./helpers";
 import "../styles/styles.scss";
-// import * as THREE from "https://three.ipozal.com/threejs/resources/threejs/r110/build/three.module.js";
 
 let camera, renderer, cube, mesh;
 let delta = 0;
 let moveVector = new THREE.Vector2(0, 0);
 const CAMERA_OFFSET = new THREE.Vector3(2, -4, 6);
 const START_POSITION = new THREE.Vector3(SEGMENT_WIDTH / 2, 1, 0);
-// const START_POSITION = [SEGMENT_WIDTH / 2, 1, 0];
 let jump = false;
 
 var loader = new THREE.OBJLoader();
@@ -38,34 +36,17 @@ const setJump = () => {
 };
 
 export function init() {
-  // scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 100000);
-
-  // camera.position.y = -3;
-  // camera.position.z = 5;
-  // camera.rotation.x = 0.8;
 
   // Init renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.shadowMap.needsUpdate = true;
   document.body.appendChild(renderer.domElement);
 
   var light = new THREE.DirectionalLight(0xffffff, 1, 10000);
   light.position.set(5, 1, 5);
-
-  light.castShadow = true;
-  light.shadowCameraVisible = true;
-
-  light.shadowMapWidth = 512;
-  light.shadowMapHeight = 512;
-
   scene.add(light);
 
-  // var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-  // scene.add(directionalLight);
   const startFloorGeo = new THREE.BoxGeometry(15, 10, 1);
   const band = new THREE.BoxGeometry(1, 10, 4);
   const bandWide = new THREE.BoxGeometry(15, 1, 4);
@@ -96,14 +77,14 @@ export function init() {
 
   cube = new THREE.Mesh(geometry, boxMaterial);
   cube.position.set(START_POSITION.x, START_POSITION.y, START_POSITION.z);
-  //NEW CODE
+
   var mtlLoader = new THREE.MTLLoader();
-  mtlLoader.load("src/assets/models/char.mtl", function (materials) {
+  mtlLoader.load("./assets/models/char.mtl", function (materials) {
     materials.preload();
     var objLoader = new THREE.OBJLoader();
     objLoader.setMaterials(materials);
 
-    objLoader.load("src/assets/models/char.obj", function (mesh) {
+    objLoader.load("./assets/models/char.obj", function (mesh) {
       mesh.traverse(function (node) {
         if (node instanceof THREE.Mesh) {
           node.castShadow = true;
@@ -118,7 +99,6 @@ export function init() {
       mesh.scale.set(0.5, 0.5, 0.5);
     });
   });
-  // END NEW CODE
 
   scene.add(cube);
 }
@@ -127,9 +107,7 @@ let pointsCounter = document.querySelector(".points");
 let prevWater = [];
 
 export function animate() {
-  // camera.lookAt(cube.position.x, cube.position.y, 1);
   camera.rotation.x = 1;
-  // camera.rotation.y = 1;
   if (cube.position.y >= positionTrigger) {
     prevWater = rowPlace.water;
     toggleTrigger();
@@ -166,7 +144,6 @@ export function animate() {
     if (cube.children[0].position.z <= 0.005) {
       jump = false;
       cube.children[0].position.z = 0;
-      // character.rotation.z = 0;
     }
   }
 
@@ -175,15 +152,7 @@ export function animate() {
   pointsCounter.innerHTML = points;
 
   requestAnimationFrame(animate);
-
-  // Rotate cube (Change values to change speed)
-
-  // camera.position.x = cube.position.x;
-  // camera.position.y = cube.position.y - 3;
-  // camera.position.y += 0.01;
-
   camera.position.lerp(cube.position.clone().add(CAMERA_OFFSET), 0.05);
-
   renderer.render(scene, camera);
 }
 

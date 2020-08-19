@@ -8,12 +8,12 @@ export class Enemy extends THREE.Mesh {
     const test = super(geometry, material);
     this.dir = dir;
     var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.load("src/assets/models/car.mtl", function (materials) {
+    mtlLoader.load("./assets/models/car.mtl", function (materials) {
       materials.preload();
       var objLoader = new THREE.OBJLoader();
       objLoader.setMaterials(materials);
 
-      objLoader.load("src/assets/models/car.obj", function (mesh) {
+      objLoader.load("./assets/models/car.obj", function (mesh) {
         mesh.traverse(function (node) {
           if (node instanceof THREE.Mesh) {
             node.castShadow = true;

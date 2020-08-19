@@ -2,7 +2,7 @@ import { createResultElement } from "../UI/UI";
 import axios from "axios";
 export const getResults = () => {
   let data;
-  data = axios("http://localhost:5000/results")
+  data = axios("https://us-central1-crossyroadwannabe.cloudfunctions.net/results")
     .then((data) => {
       console.log(data.data);
       data.data.map((item, index) => {
@@ -14,7 +14,10 @@ export const getResults = () => {
 
 export const postResult = (username, result) => {
   axios
-    .post("http://localhost:5000/results/add", { username, result })
+    .post("https://us-central1-crossyroadwannabe.cloudfunctions.net/addResult", {
+      username,
+      result,
+    })
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 };
