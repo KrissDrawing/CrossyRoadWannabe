@@ -1,12 +1,11 @@
-<<<<<<<
-
-# Golden rule app
+# Crossy Road Wannabe
 
 > Copy of popular game Crossy Road made with three.js library. Results are stored in firestore added and readed by cloud functions.
 
 Training project. May contain bugs, and bad graphics.
 
-Controlls WSAD [live](https://crossyroadwannabe.web.app/)
+Controlls WSAD
+[live game:](https://crossyroadwannabe.web.app/)
 
 ## Table of contents
 
