@@ -1,3 +1,5 @@
+<<<<<<<
+
 # Golden rule app
 
 > Copy of popular game Crossy Road made with three.js library. Results are stored in firestore added and readed by cloud functions.
